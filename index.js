@@ -1,11 +1,17 @@
 var express = require("express");
 var alexa = require("alexa-app");
+var axios = require("axios");
+var _ = require("lodash");
+var jsdom = require("jsdom");
 
+var { JSDOM } = jsdom;
 var PORT = process.env.PORT || 8080;
 var app = express();
 
 // ALWAYS setup the alexa app and attach it to express before anything else.
 var alexaApp = new alexa.app("test");
+var key = "A5ETTZ6WAQ7Z7WDJFJWUUYIDAKLQPABGK4ZOXVEOBUGJPCQRUY4GHHNOCU3BTKLWGFEH2FG6RYID4SHLEFDVWWBZBINAS7JVVRMGQEEQ"
+var getDocURL = "https://ixbapi.healthwise.net/KnowledgeContent/{DOC_ID}?hw.format=rhtml&hw.key="+key
 
 alexaApp.express({
   expressApp: app,
@@ -32,15 +38,40 @@ alexaApp.launch(function(request, response) {
 
 alexaApp.dictionary = { "conditions": ["breast cancer"] };
 
+
+function getDocID(condition) {
+  switch(condition) {
+    case "breast cancer": return "uh3697"
+    case "postpartum": return "uh4197"
+    case "kegel exercises": return "zc1451"
+    case "breast pain": return "uf7074"
+  }
+}
+
 alexaApp.intent("CareInstructionsMatchIntent", {
     "slots": { "CONDITION": "ATLAS_condition" },
     "utterances": [
       "how do I care for {conditions|CONDITION}",
     ]
   },
-  function(request, response) {
+  function(request, alexaResponse) {
     var slot = request.slots["CONDITION"]
-    response.say("I understand you want to care for "+ slot.value);
+    var condition = slot.value
+
+    var docID = getDocID(slot.value)
+    if (!docId) {
+      alexaResponse.say("I'm sorry. I couldn't find any result for " + slot.value)
+      return
+    }
+
+    var docURL = getDocURL.replace("{DOC_ID}", docID)
+
+    // Search for title in healthwise response: "${condition}: care instructions"
+    return axios.get(docURL).then(function (docResponse) {
+      var dom = new JSDOM(docResponse)
+      var text = dom.window.document.querySelector('.HwNavigationSection.HwPiArticle.HwSectionSpecialSection').textContent.replace(" Your Care Instructions", "")
+      alexaResponse.say(text)
+    })
   }
 );
 
