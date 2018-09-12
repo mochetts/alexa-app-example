@@ -30,16 +30,16 @@ alexaApp.launch(function(request, response) {
   response.say("You launched the app!");
 });
 
-alexaApp.dictionary = { "names": ["matt", "joe", "bob", "bill", "mary", "jane", "dawn"] };
+alexaApp.dictionary = { "conditions": ["breast cancer"] };
 
-alexaApp.intent("nameIntent", {
-    "slots": { "NAME": "LITERAL" },
+alexaApp.intent("CareInstructionsMatchIntent", {
+    "slots": { "CONDITION": "ATLAS_condition" },
     "utterances": [
-      "my {name is|name's} {names|NAME}", "set my name to {names|NAME}"
+      "how do I care for {conditions|CONDITION}",
     ]
   },
   function(request, response) {
-    response.say("Success!");
+    response.say("I got your request and I'm processing it!");
   }
 );
 

@@ -1,7 +1,7 @@
 {
-  "name": "alexa-app-example",
+  "name": "alexa-atlas",
   "version": "0.0.1",
-  "description": "An example Alexa Skill project using the alexa-app module with Express.",
+  "description": "CipherHealth's world changing Atlas app for Amazon Alexa.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexa-js/alexa-app-example.git"
+    "url": "git+https://github.com/mochetts/alexa-app-example.git"
   },
   "keywords": [
     "alexa",
@@ -17,10 +17,10 @@
     "echo",
     "skills"
   ],
-  "author": "Tejas Shah",
+  "author": "CipherHealth",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alexa-js/alexa-app-example/issues"
+    "url": "https://github.com/mochetts/alexa-app-example/issues"
   },
   "dependencies": {
     "alexa-app": "^4.0.0",
