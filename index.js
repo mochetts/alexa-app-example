@@ -57,9 +57,9 @@ alexaApp.intent("CareInstructionsMatchIntent", {
   function(request, alexaResponse) {
     var slot = request.slots["CONDITION"]
     var condition = slot.value
+    var docID = getDocID(condition)
 
-    var docID = getDocID(slot.value)
-    if (!docId) {
+    if (!docID) {
       alexaResponse.say("I'm sorry. I couldn't find any result for " + slot.value)
       return
     }
@@ -68,7 +68,7 @@ alexaApp.intent("CareInstructionsMatchIntent", {
 
     // Search for title in healthwise response: "${condition}: care instructions"
     return axios.get(docURL).then(function (docResponse) {
-      var dom = new JSDOM(docResponse)
+      var dom = new JSDOM(docResponse.data)
       var text = dom.window.document.querySelector('.HwNavigationSection.HwPiArticle.HwSectionSpecialSection').textContent.replace(" Your Care Instructions", "")
       alexaResponse.say(text)
     })
