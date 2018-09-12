@@ -39,7 +39,18 @@ alexaApp.intent("CareInstructionsMatchIntent", {
     ]
   },
   function(request, response) {
-    response.say("I got your request and I'm processing it!");
+    var slot = request.slots["CONDITION"]
+    response.say("I understand you want to care for "+ slot.value);
+  }
+);
+
+alexaApp.intent("HackathonWinnerIntent", {
+    "utterances": [
+      "who's going to win the hackathon",
+    ]
+  },
+  function(request, response) {
+    response.say("That's pretty obvious, Lannisters will rock");
   }
 );
 
