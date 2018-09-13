@@ -3,6 +3,7 @@ var alexa = require("alexa-app");
 var axios = require("axios");
 var _ = require("lodash");
 var jsdom = require("jsdom");
+var Speech = require('ssml-builder');
 
 var { JSDOM } = jsdom;
 var PORT = process.env.PORT || 8080;
@@ -70,7 +71,15 @@ alexaApp.intent("CareInstructionsMatchIntent", {
     return axios.get(docURL).then(function (docResponse) {
       var dom = new JSDOM(docResponse.data)
       var text = dom.window.document.querySelector('.HwNavigationSection.HwPiArticle.HwSectionSpecialSection').textContent.replace(" Your Care Instructions", "")
-      alexaResponse.say(text)
+
+      var speech = new Speech()
+        .say('Atlas was built with love by your friends at CipherHealth.')
+        .pause('2s')
+        .say(text)
+
+      var speechOutput = speech.ssml(true);
+
+      alexaResponse.say(speechOutput)
     })
   }
 );
