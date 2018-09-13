@@ -67,15 +67,16 @@ alexaApp.intent("CareInstructionsMatchIntent", {
 
     var docURL = getDocURL.replace("{DOC_ID}", docID)
 
-    // Search for title in healthwise response: "${condition}: care instructions"
     return axios.get(docURL).then(function (docResponse) {
       var dom = new JSDOM(docResponse.data)
       var text = dom.window.document.querySelector('.HwNavigationSection.HwPiArticle.HwSectionSpecialSection').textContent.replace(" Your Care Instructions", "")
 
       var speech = new Speech()
-        .say('Atlas was built with love by your friends at CipherHealth.')
-        .pause('2s')
+        .say('Atlas was brought to you by CipherHealth.')
+        .pause('1s')
         .say(text)
+        .pause('1s')
+        .say('The Lannisters always pay their debts')
 
       var speechOutput = speech.ssml(true);
 
